@@ -78,7 +78,6 @@ fun ThemeToggleSwitch(
 ) {
     // Controls animation state
     var isAnimating by remember { mutableStateOf(false) }
-    var animationTrigger by remember { mutableIntStateOf(0) }
 
     // Image resources
     val sunImageResId = R.drawable.ic_sun
@@ -118,7 +117,7 @@ fun ThemeToggleSwitch(
     )
 
     // Automatically reset animation state after the duration
-    LaunchedEffect(animationTrigger) {
+    LaunchedEffect(isAnimating) {
         if (isAnimating) {
             delay(durationMillis.toLong())
             isAnimating = false
@@ -130,7 +129,6 @@ fun ThemeToggleSwitch(
         onClick = {
             if (!isAnimating) {
                 isAnimating = true
-                animationTrigger++ // Forces LaunchedEffect to rerun
                 onThemeChanged(!isDarkMode)
             }
         },
@@ -154,7 +152,10 @@ fun ThemeToggleSwitch(
 
             // Fading background icon (e.g., stars or clouds)
             Image(
-                painter = painterResource(if (isDarkMode) starImageResId else cloudImageResId),
+                painter = painterResource(
+                    if (isDarkMode) starImageResId
+                    else cloudImageResId
+                ),
                 contentDescription = null,
                 modifier = Modifier
                     .offset(x = backgroundIconOffset)
@@ -163,7 +164,9 @@ fun ThemeToggleSwitch(
             )
             // Rotating foreground icon (e.g., sun or moon)
             Image(
-                painter = painterResource(if (isDarkMode) moonImageResId else sunImageResId),
+                painter = painterResource(
+                    if (isDarkMode) moonImageResId
+                    else sunImageResId),
                 contentDescription = null,
                 modifier = Modifier
                     .offset(x = mainIconOffset)
